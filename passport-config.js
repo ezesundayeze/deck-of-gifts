@@ -44,8 +44,6 @@ module.exports = (passport) => {
     Campaign.findOne({ _id: campaignUrl }).then((campaign) => {
       campaign.users.find(user => {
         if (user.phoneNumber === phoneNumber & bcrypt.compareSync(password, user.password)) {
-          // if (bcrypt.compareSync(password, user.password)) {
-          //   console.log('eze', user)
           done(null, user)
           // }
         } else {
