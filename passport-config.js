@@ -45,7 +45,6 @@ module.exports = (passport) => {
       campaign.users.find(user => {
         if (user.phoneNumber === phoneNumber & bcrypt.compareSync(password, user.password)) {
           done(null, user)
-          // }
         } else {
           done(null, false, { message: 'User does not exist' })
         }

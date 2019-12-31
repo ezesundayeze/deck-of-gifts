@@ -10,7 +10,7 @@ router.post('/', (req, res, next) => {
     { session: false, failWithError: true },
     (err, user, info) => {
       if (user === false) {
-        res.json({ message: info })
+        res.json(info.message)
       }
       if (err) {
         res.json({ message: 'Campaign does not exist' })
@@ -20,7 +20,7 @@ router.post('/', (req, res, next) => {
       }
     }
   )(req, res, next)
-}, signIn)
+})
 
 function signIn (req, res, next) {
   // Generate token

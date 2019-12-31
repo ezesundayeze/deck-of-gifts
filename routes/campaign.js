@@ -6,6 +6,7 @@ const router = express.Router()
 const uuidv4 = require('uuid/v4')
 const { emailContent, transport } = require('../emailConfig')
 const password = uuidv4()
+const passport = require('passport')
 
 /*
 * Get all campaigns
@@ -59,7 +60,7 @@ router.get('/', (req, res) => {
 
   .patch('/', (req, res) => {
     res.json({ message: 'update deck' })
-  }).get('/:id', (req, res, next) => {
+  }).get('/:id', passport.authenticate('jwt'), (req, res, next) => {
     Campaign.findOne({ _id: req.params.id }).then((campaign) => {
       res.json({ campaign })
     }).catch((err) => {

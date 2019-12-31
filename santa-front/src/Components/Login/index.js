@@ -10,9 +10,6 @@ const Login = (props) => {
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const redirect = () => {
-    return <Redirect to='/' />
-  }
   useEffect(() => {
     fetch('http://localhost:3001/login/',
       {
@@ -26,7 +23,6 @@ const Login = (props) => {
     ).then((data) => {
       return data.json()
     }).then((response) => {
-      // response.message && setMessage(response.message)
       if (response.message === 'Campaign does not exist') {
         props.history.push('/404')
       }
