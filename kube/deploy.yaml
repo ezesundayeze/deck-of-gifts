@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: santa-gift
+spec: 
+    replicas: 1
+    selector:
+        matchLabels:
+            app: santa-gift
+    template:
+        metadata:
+            labels:
+                app: santa-gift
+        spec: 
+            containers:
+                - name: app
+                  image: ezesundayeze/santa
+                  ports:
+                    - containerPort: 3001
+                  imagePullPolicy: Always
+

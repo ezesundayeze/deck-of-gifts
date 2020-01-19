@@ -58,16 +58,18 @@ router.get('/', (req, res) => {
     res.json({ message: 'delete a deck' })
   })
 
-  .patch('/', (req, res) => {
+  .patch('/', (req, res, next) => {
     res.json({ message: 'update deck' })
-  }).get('/:id', passport.authenticate('jwt'), (req, res, next) => {
-    Campaign.findOne({ _id: req.params.id }).then((campaign) => {
-      res.json({ campaign })
-    }).catch((err) => {
-      res.status(500).send('something failed')
-      next(err)
-      console.log(err)
-    })
+  }).get('/:id', (req, res, next) => {
+    passport.authenticate('jwt', (req, user, next) => {
+      Campaign.findOne({ _id: req.campaignUrl }).then((campaign) => {
+        console.log('eze:::', campaign, req)
+        return res.json(campaign)
+      }).catch((err) => {
+        console.log('eze:::?')
+        return res.send(err)
+      })
+    }, { session: false })(req, res, next)
   })
 
 module.exports = router

@@ -4,32 +4,32 @@ const LocalStrategy = require('passport-local').Strategy
 const { ExtractJwt } = require('passport-jwt')
 const bcrypt = require('bcrypt')
 const { Campaign } = require('./models/models')
-const jwt = require('jsonwebtoken')
 
-const JWT_SECRET = '89723947jhdfhfkjwehfe3nbjhi'
+const { JWT_SECRET } = require('./secret')
 
 module.exports = (passport) => {
   passport.use(new JWTStrategy({
-    jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('authorization'),
+    jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('JWT'),
     secretOrKey: JWT_SECRET
   },
 
   (payload, done) => {
-    Campaign.findOne({ _id: payload.campaign }).then((campaign) => {
+    const { password, phoneNumber, campaignUrl } = payload
+    console.log(campaignUrl, payload)
+    Campaign.findOne({ _id: campaignUrl }).then((campaign) => {
+      console.log(campaign, 'Campaign')
       campaign.users.find(user => {
-        if (user.phoneNumber === payload.phoneNumber) {
-          return user
-        }
-        if (bcrypt.compareSync(payload.password, user.password)) {
-          const accessToken = jwt.sign({ phoneNumber: user.phoneNumber }, JWT_SECRET, {
-            expiresIn: 86400
-          })
-
-          done(null, accessToken)
+        if (user.phoneNumber === phoneNumber & bcrypt.compareSync(password, user.password)) {
+          console.log('login')
+          return done(null, user)
+        } else {
+          console.log('sunday', user)
+          return done(null, false, { message: 'User does not exist' })
         }
       })
     }).catch((error) => {
-      done(error, false)
+      console.log('something')
+      return done(error, false)
     })
   })
   )
@@ -44,13 +44,14 @@ module.exports = (passport) => {
     Campaign.findOne({ _id: campaignUrl }).then((campaign) => {
       campaign.users.find(user => {
         if (user.phoneNumber === phoneNumber & bcrypt.compareSync(password, user.password)) {
-          done(null, user)
+          return done(null, user)
         } else {
-          done(null, false, { message: 'User does not exist' })
+          return done(null, false, { message: 'User does not exist' })
         }
       })
     }).catch((error) => {
-      done(error, false, { message: 'Campaign does not exist' })
+      console.log('eze', error)
+      return done(error, false)
     })
   }
   ))

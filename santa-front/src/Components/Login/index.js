@@ -52,6 +52,10 @@ const Login = (props) => {
         return data.json()
       }).then((response) => {
         response.message && setMessage(response.message)
+        if (response.success) {
+          props.history.push(`/campaign/${props.match.params.id}`)
+          localStorage.setItem('token', response.token)
+        }
         setIsLoading(false)
       }).catch((error) => {
         setIsLoading(false)

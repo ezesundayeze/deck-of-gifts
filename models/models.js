@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 const mongoosePaginate = require('mongoose-paginate-v2')
 const uuidv4 = require('uuid/v4')
-const bcrypt = require('bcrypt')
-const saltRounds = 10
 
 const campaignSchema = mongoose.Schema({
   title: String,
